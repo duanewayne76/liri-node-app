@@ -16,32 +16,32 @@ let input = process.argv.slice(3).join(" ");
 
 switch (search) {
     case "concert-this":
-        searchConcert();
+        searchConcert(input);
         break;
 
     case "spotify-this-song":
-        searchSong();
+        searchSong(input);
         break;
 
     case "movie-this":
-        searchMovie();
+        searchMovie(input);
         break;
 
     case "do-what-it-says":
-        searchDo();
+        searchDo(input);
         break;
 
 
 }
 
-function searchConcert() {
-    console.log(`${input} concert`);
+function searchConcert(input) {
+    // console.log(`${input} concert`);
     var axios = require("axios");
     axios
         .get(`https://rest.bandsintown.com/artists/${input}/events?app_id=codingbootcamp`)
         .then(function (response) {
             for (let i = 0; i < response.data.length; i++) {
-
+                console.log(input);
                 console.log(`Venue: ${response.data[i].venue.name}`);
                 console.log(`Location: ${response.data[i].venue.city}`);
                 console.log(`Date: ${moment(response.data[i].datetime).format("MM/DD/YYYY")}`);
@@ -62,20 +62,22 @@ function runSpotifyQuery(song) {
         }
 
         // console.log(JSON.stringify(data.tracks.items));
+        console.log("-----------------------------------------------");
         console.log("Artist(s):", data.tracks.items[0].album.artists[0].name);
         console.log("Song Name:", data.tracks.items[0].name);
         console.log("Album Name:", data.tracks.items[0].album.name);
         console.log("Preview URL:", data.tracks.items[0].preview_url);
+        console.log("-----------------------------------------------");
 
     });
 }
 
 
-function searchSong() {
-    console.log(`${input} song`);
-    console.log("type of input", input.length);
+function searchSong(input) {
+    // console.log(`${input} song`);
+    // console.log("type of input", input.length);
     if (input.length == 0) {
-        console.log("That didn't work");
+        // console.log("That didn't work");
         input = "Ace of Base";
         // change here
         runSpotifyQuery(input);
@@ -90,32 +92,16 @@ function searchSong() {
 
 
 
-function searchMovie() {
+function searchMovie(input) {
     // console.log(`${input} movie`);
     if (input.length == 0) {
-        console.log("That didn't work");
+        // console.log("That didn't work");
         input = "Mr.Nobody";
-        axios
-        .get(`http://www.omdbapi.com/?t=${input}&apikey=19cce332`)
-        .then(function (response) {
-            // console.log(response);
-            console.log(`Title: ${response.data.Title}`);
-            console.log(`Year: ${response.data.Year}`);
-            console.log(`IMDB Rating: ${response.data.imdbRating}`);
-            console.log(`Rotten Tomatoes: ${response.data.Ratings[1].Value}`);
-            console.log(`Country: ${response.data.Country}`);
-            console.log(`Language: ${response.data.Language}`);
-            console.log(`Plot: ${response.data.Plot}`);
-            console.log(`Actors: ${response.data.Actors}`);
-
-        })
-    }
-    else {
-        
         axios
             .get(`http://www.omdbapi.com/?t=${input}&apikey=19cce332`)
             .then(function (response) {
                 // console.log(response);
+                console.log("-----------------------------------------------");
                 console.log(`Title: ${response.data.Title}`);
                 console.log(`Year: ${response.data.Year}`);
                 console.log(`IMDB Rating: ${response.data.imdbRating}`);
@@ -124,6 +110,26 @@ function searchMovie() {
                 console.log(`Language: ${response.data.Language}`);
                 console.log(`Plot: ${response.data.Plot}`);
                 console.log(`Actors: ${response.data.Actors}`);
+                console.log("-----------------------------------------------");
+
+            })
+    }
+    else {
+
+        axios
+            .get(`http://www.omdbapi.com/?t=${input}&apikey=19cce332`)
+            .then(function (response) {
+                // console.log(response);
+                console.log("-----------------------------------------------");
+                console.log(`Title: ${response.data.Title}`);
+                console.log(`Year: ${response.data.Year}`);
+                console.log(`IMDB Rating: ${response.data.imdbRating}`);
+                console.log(`Rotten Tomatoes: ${response.data.Ratings[1].Value}`);
+                console.log(`Country: ${response.data.Country}`);
+                console.log(`Language: ${response.data.Language}`);
+                console.log(`Plot: ${response.data.Plot}`);
+                console.log(`Actors: ${response.data.Actors}`);
+                console.log("-----------------------------------------------");
 
             })
     }
@@ -137,27 +143,25 @@ function searchMovie() {
 function searchDo() {
 
     fs.readFile("./random.txt", "utf8", function (err, data) {
-        console.log(data);
-        data = data.split(",");
+        // console.log(data);
+        data = data.split(',');
         var action = data[0];
-        var query = data[1];
+        var query = data[1].trim();
         switch (action) {
             case "concert-this":
                 searchConcert(query);
+                console.log(query);
                 break;
 
             case "spotify-this-song":
                 searchSong(query);
+                console.log(query);
                 break;
 
             case "movie-this":
                 searchMovie(query);
+                console.log(query);
                 break;
-
-            case "do-what-it-says":
-                searchDo(query);
-                break;
-
 
 
         }
